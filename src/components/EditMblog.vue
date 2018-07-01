@@ -2,7 +2,7 @@
   <div class="edit">
     <div class="edit-container">
       <div>
-        <textarea v-model="content" placeholder="你最近有什么新鲜事要分享吗？"></textarea>
+        <textarea v-model="content" @click="scrollToView" placeholder="你最近有什么新鲜事要分享吗？"></textarea>
       </div>
     </div>
     <div class="toolbar">
@@ -27,6 +27,9 @@ export default {
 
   },
   methods: {
+    scrollToView (e) {
+      document.getElementsByClassName('app-header')[0].scrollIntoView(true)
+    },
     goToHome () {
       this.$router.push('/')
     },
@@ -75,25 +78,38 @@ export default {
 </script>
 
 <style scoped>
+.edit {
+  width: 100%;
+  height: 100%;
+}
+
 .edit-container {
-  /* width: 100%; */
-  height: calc(100vh - 50px - 40px - 2px);
+  width: 100%;
+  top: 50px;
+  position: absolute;
+  bottom: 45px;
 }
 
 .edit-container > div {
   margin: 0 10px;
+  /* width: 100%; */
+  margin-bottom: 10px;
   height: 100%;
 }
 
 .edit-container div textarea {
   width: 100%;
-  height: calc(100% - 20px);
+  height: 100%;
   padding: 0;
   border: 0;
+  resize: none;
+  font-size: 15px;
 }
 
 .toolbar {
   width: 100%;
+  position: absolute;
+  bottom: 0px;
 }
 
 .toolbar ul {
@@ -118,4 +134,18 @@ export default {
 .toolbar ul li a {
   text-decoration: none;
 }
+
+/* @media screen{
+  @media (min-device-width:1078px) {
+    input:focus,textarea:focus {
+      font-size: 16px !important;
+    }
+  }
+
+  @media (min-device-width : 320px) and (max-device-width : 1077px) {
+    input:focus, textarea:focus {
+      font-size: 16px !important;
+    }
+  }
+} */
 </style>

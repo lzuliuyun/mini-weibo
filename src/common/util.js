@@ -17,7 +17,11 @@ export function getRelativeTimeInfo (time) {
     if (hours < 3) {
       timeInfo = hours + '小时前'
     } else if (hours < 24) {
-      timeInfo = '今天'
+      let publishDate = +new Date(time)
+      let curDate = new Date()
+      let curStartDate = +new Date(curDate.getFullYear() + '-' + (curDate.getMonth() + 1) + '-' + (curDate.getDay() + 1))
+
+      timeInfo = publishDate < curStartDate ? '昨天' : '今天'
     } else {
       // days
       if (days > 2) {

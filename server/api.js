@@ -8,7 +8,8 @@ const pool = mysql.createPool({
   password: dbConfig.mysql.password,
   database: dbConfig.mysql.database,
   port: dbConfig.mysql.port,
-  multipleStatements: true  //多语句查询
+  // 多语句查询
+  multipleStatements: true
 })
 
 module.exports = {
