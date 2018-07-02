@@ -109,6 +109,7 @@ module.exports = {
       var sql = sqlMap.comment.addComment
       conn.query(sql, [content, date, mblogid], (err, result) => {
         if (err) throw err
+        result.date = date
         res.json(result)
         conn.release()
       })

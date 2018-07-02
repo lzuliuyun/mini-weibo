@@ -30,6 +30,7 @@
 import {getRelativeTimeInfo} from 'common/util'
 import CommentDisplay from 'components/CommentDisplay'
 import Comment from 'components/Comment'
+import {mapGetters} from 'vuex'
 
 export default {
   props: {
@@ -124,11 +125,20 @@ export default {
       let hour = curDate.getHours() > 9 ? curDate.getHours() : '0' + curDate.getHours()
       let minute = curDate.getMinutes() > 9 ? curDate.getMinutes() : '0' + curDate.getMinutes()
       return getRelativeTimeInfo(this.mblog.date) + ' ' + hour + ':' + minute
-    }
+    },
+    ...mapGetters(['commentAdded'])
   },
   components: {
     Comment,
     CommentDisplay
+  },
+  watch: {
+    commentAdded (newComment, oldComment) {
+      if (newComment.mblogid === this.mblog.id) {
+        this.mblog.commentNum++
+        this.comments = this.comments.concat(newComment)
+      }
+    }
   }
 }
 </script>

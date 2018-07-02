@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import {mapMutations} from 'vuex'
+
 export default {
   data () {
     return {
@@ -41,13 +43,16 @@ export default {
       }
 
       this.mblogid && this.$http.post('/api/comment', comment).then((res) => {
-        // todo
-        this.$emit('publishCommentSuccess', comment)
+        comment.date = res.data.date
+        this.commentAdded(comment)
         this.goToHome()
       }, (err) => {
         console.log(err)
       })
-    }
+    },
+    ...mapMutations({
+      commentAdded: 'SET_COMMENT_ADDED'
+    })
   }
 }
 </script>

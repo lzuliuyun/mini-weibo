@@ -1,0 +1,1 @@
+export const SET_COMMENT_ADDED = 'SET_COMMENT_ADDED'
