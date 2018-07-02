@@ -4,7 +4,7 @@
  Source Server         : mysql
  Source Server Type    : MySQL
  Source Server Version : 50640
- Source Host           : 111.230.*.*:3306
+ Source Host           : *.*.*.*:3306
  Source Schema         : app
 
  Target Server Type    : MySQL
