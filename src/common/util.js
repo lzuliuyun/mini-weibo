@@ -1,5 +1,7 @@
 export function getRelativeTimeInfo (time) {
   let timeInfo = ''
+  let timeDayInfo = ''
+  let tempTime = new Date(time)
   let result = new Date() - new Date(time)
   let minutes = result / 1000 / 60 | 0
   let hours = result / 1000 / 60 / 60 | 0
@@ -22,15 +24,18 @@ export function getRelativeTimeInfo (time) {
       let curStartDate = +new Date(curDate.getFullYear() + '-' + (curDate.getMonth() + 1) + '-' + (curDate.getDay() + 1))
 
       timeInfo = publishDate < curStartDate ? '昨天' : '今天'
+      timeDayInfo = publishDate < curStartDate ? (tempTime.getMonth() + 1) + '-' + (tempTime.getDay() + 1) : ''
     } else {
       // days
+      timeDayInfo = (tempTime.getMonth() + 1) + '-' + (tempTime.getDay() + 1)
       if (days > 2) {
         if (months === 0) {
-          timeInfo = months + '天前'
+          timeInfo = days + '天前'
         } else if (months < 12) {
           timeInfo = months + '月前'
         } else {
           timeInfo = years + '年前'
+          timeDayInfo = tempTime.getFullYear() + '-' + timeDayInfo
         }
       } else if (days === 2) {
         timeInfo = '前天'
@@ -40,5 +45,27 @@ export function getRelativeTimeInfo (time) {
     }
   }
 
-  return timeInfo
+  return timeInfo + ' ' + timeDayInfo
+}
+
+export function throttle (fn, time) {
+  let canRun = true
+  let timerId = null
+
+  let throttled = function () {
+    if (canRun) {
+      canRun = false
+      timerId = setTimeout(() => {
+        fn.apply(this, arguments)
+        canRun = true
+      }, time)
+    }
+  }
+
+  throttled.cancel = () => {
+    clearTimeout(timerId)
+    canRun = false
+  }
+
+  return throttled
 }

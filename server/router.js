@@ -26,4 +26,19 @@ router.post('/mblog/:id/praise', (req, res, next) => {
   api.updateMblogPraise(req, res, next)
 })
 
+router.get('/draft', (req, res, next) => {
+  api.getDraft(req, res, next)
+})
+
+router.get('/comment', (req, res, next) => {
+  api.getComment(req, res, next)
+})
+
+router.post('/comment', (req, res, next) => {
+  api.addComment(req, res, next)
+})
+
+router.delete('/comment/:id', (req, res, next) => {
+  api.deleteComment(req, res, next)
+})
 module.exports = router

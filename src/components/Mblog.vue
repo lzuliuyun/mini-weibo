@@ -8,34 +8,63 @@
     <div :class="showall ? 'content content-showall' : 'content'" @click="toggleShowAll">{{mblog.content}}</div>
     <div class="toolbar">
       <ul class="clearfix">
-        <li><a href="#" class="btn-comment"><span></span><span>评论</span></a></li>
-        <li><a href="#" class="btn-praise" @click="onPraise"><span></span><span>{{praise}}</span></a></li>
-        <!-- <li><a href="">删除</a></li> -->
+        <li v-if="toolbar.includes('comment')"><div class="btn-comment" @click="onComment"><span></span><span>{{commentNum}}</span></div></li>
+        <li v-if="toolbar.includes('praise')"><div class="btn-praise" @click="onPraise"><span></span><span>{{praise}}</span></div></li>
+        <li v-if="toolbar.includes('delete')"><div class="btn-delete" @click="onDelete"><span></span><span>删除</span></div></li>
+        <li v-if="toolbar.includes('edit')"><div class="btn-edit" @click="onEdit"><span></span><span>编辑</span></div></li>
       </ul>
     </div>
-    <div class="comment"></div>
+    <div class="comment" v-if="commentState">
+      <div v-if="comments.length">
+        <comment-display v-for="(comment, index) in comments" :comment="comment" :key="index" @commentDeleteSuccess="onCommentDeleteSuccess"></comment-display>
+      </div>
+      <div class="comment-input-container">
+        <input type="text" @focus="onCommentInputFocus" placeholder="小姐姐，小哥哥，快来来评论我呀">
+      </div>
+    </div>
     <div class="split"></div>
   </div>
 </template>
 
 <script>
 import {getRelativeTimeInfo} from 'common/util'
+import CommentDisplay from 'components/CommentDisplay'
+import Comment from 'components/Comment'
 
 export default {
   props: {
     mblog: {
       type: Object
+    },
+    toolbar: {
+      type: Array,
+      default: function () {
+        return ['comment', 'praise']
+      }
+    },
+    type: {
+      type: String,
+      default: 'edit'
     }
   },
   data () {
     return {
+      comments: [],
       showall: false,
-      isParise: false
+      isParise: false,
+      clickStartY: 0,
+      commentState: false
     }
   },
   methods: {
     toggleShowAll (e) {
+      !this.showall && (this.clickStartY = window.pageYOffset)
+
       this.showall = !this.showall
+
+      if (!this.showall) {
+        window.scrollTo(0, this.clickStartY)
+      }
     },
     onPraise (e) {
       this.isParise = !this.isParise
@@ -44,11 +73,51 @@ export default {
         .then((res) => {
           this.mblog.praise = this.mblog.praise + praise
         })
+    },
+    onDelete () {
+      this.$http.delete('/api/mblog/' + this.mblog.id)
+        .then((res) => {
+          this.$emit('mblogDelete', this.mblog.id)
+        }, (err) => {
+          console.log(err)
+        })
+    },
+    onEdit () {
+      this.$router.push({
+        name: 'edit',
+        params: {
+          mblog: this.mblog,
+          toolbar: this.type === 'draft' ? ['save', 'publish', 'back'] : ['save', 'publish', 'delete', 'back']
+        }
+      })
+    },
+    onComment () {
+      this.commentState = !this.commentState
+      this.commentState && this.$http.get('/api/comment', { params: { mblogid: this.mblog.id } })
+        .then((res) => {
+          this.comments = res.data
+        })
+    },
+    onCommentInputFocus () {
+      this.$router.push({
+        name: 'comment',
+        params: {
+          mblog: this.mblog
+        }
+      })
+    },
+    onCommentDeleteSuccess (id) {
+      this.comments = this.comments.filter((comment) => {
+        return comment.id !== id
+      })
     }
   },
   computed: {
     praise () {
       return this.mblog.praise > 0 ? this.mblog.praise : '赞'
+    },
+    commentNum () {
+      return this.mblog.commentNum > 0 ? this.mblog.commentNum : '评论'
     },
     time () {
       let curDate = new Date(this.mblog.date)
@@ -56,6 +125,10 @@ export default {
       let minute = curDate.getMinutes() > 9 ? curDate.getMinutes() : '0' + curDate.getMinutes()
       return getRelativeTimeInfo(this.mblog.date) + ' ' + hour + ':' + minute
     }
+  },
+  components: {
+    Comment,
+    CommentDisplay
   }
 }
 </script>
@@ -83,6 +156,7 @@ export default {
     max-height: 200px;
     word-wrap: break-word;
     text-align: left;
+    white-space: pre-wrap;
   }
 
   .content-showall {
@@ -104,15 +178,12 @@ export default {
     padding: 5px 10px;
   }
 
-  .toolbar ul li a {
-    text-decoration: none;
-  }
-
   .toolbar ul li a span {
     vertical-align: middle;
   }
 
-  .btn-comment span:first-of-type, .btn-praise span:first-of-type {
+  .toolbar ul li span:first-of-type {
+    vertical-align: middle;
     background-size: cover;
     display: inline-block;
     width: 1em;
@@ -127,6 +198,32 @@ export default {
 
   .btn-comment span:first-of-type {
     background-image: url(../../static/images/comment.svg);
+  }
+
+  .btn-edit span:first-of-type {
+    background-image: url(../../static/images/edit.svg);
+  }
+
+  .btn-delete span:first-of-type {
+    background-image: url(../../static/images/delete.svg);
+  }
+
+  .comment-input-container {
+    background-color: #fafafa;
+    position: relative;
+    width: 100%;
+    padding: .5em;
+    box-sizing: border-box;
+    border-bottom: 1px solid #ebebeb;
+  }
+
+  .comment-input-container input {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    height: 2em;
+    border: 1px solid #ebebeb;
+    text-indent: 5px;
   }
 
   .split {

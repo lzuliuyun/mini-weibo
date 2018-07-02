@@ -1,10 +1,20 @@
 <template>
   <div id="app">
     <div class="app-header">
-      <div>Wechat SLB and GBB</div>
+      <router-link to="/">Wechat SLB and GBB</router-link>
     </div>
     <div class="app-temp"></div>
-    <router-view/>
+    <div>
+      <keep-alive>
+          <router-view v-if="$route.meta.keepAlive">
+          </router-view>
+      </keep-alive>
+      <router-view v-if="!$route.meta.keepAlive">
+      </router-view>
+      <!-- <keep-alive exclude="comment">
+        <router-view/>
+      </keep-alive> -->
+    </div>
   </div>
 </template>
 
@@ -22,10 +32,17 @@ export default {
   line-height: 40px;
   text-align: center;
   box-shadow: 0 5px 5px rgba(0, 0, 0, .08);
-  color: rgba(0,0,0,0.87);
   position: fixed;
   z-index: 10;
   background-color: white;
+}
+
+.app-header a {
+  color: rgba(0,0,0,0.87);
+  text-decoration: none;
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .app-temp {

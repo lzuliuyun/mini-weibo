@@ -3,8 +3,9 @@
       <div class="mblog-container">
         <mblog v-for="mblog in mblogs" :mblog="mblog" :key="mblog.id"></mblog>
       </div>
-      <div class="add-container">
-        <a href="#" @click="startEdit"></a>
+      <div class="toolbar-container">
+        <router-link to="edit" class="edit"></router-link>
+        <router-link to="draft" class="draft"></router-link>
       </div>
   </div>
 </template>
@@ -25,9 +26,6 @@ export default {
       })
   },
   methods: {
-    startEdit () {
-      this.$router.push('/edit')
-    }
   },
   components: {
     Mblog
@@ -37,18 +35,26 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .add-container {
+  .toolbar-container {
     position: fixed;
     right: 40px;
     bottom: 100px;
   }
 
-  .add-container a {
+  .toolbar-container a {
     display: block;
-    background-image: url(../../static/images/add.svg);
     background-size: 90%;
     width: 30px;
     height: 30px;
+    padding: 5px 0;
     background-repeat: no-repeat;
+  }
+
+  .toolbar-container a.edit {
+    background-image: url(../../static/images/add.svg);
+  }
+
+  .toolbar-container a.draft {
+    background-image: url(../../static/images/draft.svg);
   }
 </style>
