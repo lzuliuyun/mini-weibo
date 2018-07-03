@@ -3,6 +3,7 @@ const router = express.Router()
 const api = require('./api')
 const multer = require('multer')
 const config = require('./config')
+const uuid = require('uuid/v1')
 
 const storage = multer.diskStorage({
   // 设置上传后文件路径，uploads文件夹会自动创建。
@@ -12,7 +13,7 @@ const storage = multer.diskStorage({
   // 给上传文件重命名，获取添加后缀名
   filename: function (req, file, cb) {
     var fileFormat = (file.originalname).split('.')
-    cb(null, file.fieldname + '-' + Date.now() + '.' + fileFormat[fileFormat.length - 1])
+    cb(null, uuid() + '.' + fileFormat[fileFormat.length - 1])
   }
 })
 
@@ -68,7 +69,7 @@ router.delete('/comment/:id', (req, res, next) => {
 router.get('/image', (req, res, next) => {
   api.getImage(req, res, next)
 })
-router.post('/image', upload.array('image', 9), (req, res, next) => {
+router.post('/image', upload.array('image[]', 9), (req, res, next) => {
   api.uploadImage(req, res, next)
 })
 

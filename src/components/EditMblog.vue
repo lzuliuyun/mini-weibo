@@ -13,11 +13,25 @@
         <textarea v-model="content" @click="scrollToView" placeholder="你最近有什么新鲜事要分享吗？"></textarea>
       </div>
     </div>
+    <div>
+        <vue-core-image-upload
+          class="btn btn-primary"
+          :crop="false"
+          inputOfFile="image"
+          @imageuploaded="imageuploaded"
+          :max-file-size="5242880"
+          :multiple="true"
+          :multiple-size="9"
+          :data="{mblogid: id}"
+          url="/api/image" >
+        </vue-core-image-upload>
+    </div>
   </div>
 </template>
 
 <script>
 import {throttle} from 'common/util'
+import VueCoreImageUpload from 'vue-core-image-upload'
 
 export default {
   data () {
@@ -96,6 +110,9 @@ export default {
       } else {
         this.goToHome()
       }
+    },
+    imageuploaded (res) {
+      console.log(res)
     }
   },
   computed: {
@@ -110,6 +127,9 @@ export default {
     content () {
       this.throttleSaveMblogFun()
     }
+  },
+  components: {
+    VueCoreImageUpload
   }
 }
 </script>

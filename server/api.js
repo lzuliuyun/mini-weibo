@@ -142,17 +142,24 @@ module.exports = {
   uploadImage (req, res, next) {
     var files = req.files
     var imageSqlData = []
+    var resImageData = []
     var date = +new Date()
     var mblogid = req.body.mblogid
     files.forEach((file) => {
       imageSqlData.push([file.originalname, file.path, date, mblogid])
+      resImageData.push({
+        name: file.originalname,
+        path: file.path,
+        date: date,
+        mblogid: mblogid
+      })
     })
     pool.getConnection((err, conn) => {
       if (err) throw err
       var sql = sqlMap.image.addImages
       conn.query(sql, [imageSqlData], (err, result) => {
         if (err) throw err
-        res.json(result)
+        res.json(resImageData)
         conn.release()
       })
     })
