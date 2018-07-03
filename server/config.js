@@ -5,5 +5,8 @@ module.exports = {
     password: 'liuyun',
     database: 'app',
     port: '3306'
+  },
+  imageStorage: {
+    path: 'upload/'
   }
 }

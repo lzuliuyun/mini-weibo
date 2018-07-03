@@ -12,5 +12,10 @@ module.exports = {
     addComment: 'insert into comment(content, date, mblogid) values (?, ?, ?)',
     getComment: 'select * from comment where mblogid = ? order by date asc',
     deleteComment: 'delete from comment where id = ?'
+  },
+  image: {
+    addImages: 'insert into image (name, path, date, mblogid) values ?',
+    getImages: 'select * from image where mblogid = ? and isdelete = 0',
+    deleteImage: 'update image set isdelete = 1 where id = ?'
   }
 }

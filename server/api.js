@@ -1,5 +1,5 @@
 const mysql = require('mysql')
-const dbConfig = require('./db')
+const dbConfig = require('./config')
 const sqlMap = require('./sqlMap')
 
 const pool = mysql.createPool({
@@ -132,6 +132,48 @@ module.exports = {
     pool.getConnection((err, conn) => {
       if (err) throw err
       var sql = sqlMap.comment.deleteComment
+      conn.query(sql, [id], (err, result) => {
+        if (err) throw err
+        res.json(result)
+        conn.release()
+      })
+    })
+  },
+  uploadImage (req, res, next) {
+    var files = req.files
+    var imageSqlData = []
+    var date = +new Date()
+    var mblogid = req.body.mblogid
+    files.forEach((file) => {
+      imageSqlData.push([file.originalname, file.path, date, mblogid])
+    })
+    pool.getConnection((err, conn) => {
+      if (err) throw err
+      var sql = sqlMap.image.addImages
+      conn.query(sql, [imageSqlData], (err, result) => {
+        if (err) throw err
+        res.json(result)
+        conn.release()
+      })
+    })
+  },
+  getImage (req, res, next) {
+    var mblogid = req.query.mblogid
+    pool.getConnection((err, conn) => {
+      if (err) throw err
+      var sql = sqlMap.image.getImages
+      conn.query(sql, [mblogid], (err, result) => {
+        if (err) throw err
+        res.json(result)
+        conn.release()
+      })
+    })
+  },
+  deleteImage (req, res, next) {
+    var id = req.params.id
+    pool.getConnection((err, conn) => {
+      if (err) throw err
+      var sql = sqlMap.image.deleteImage
       conn.query(sql, [id], (err, result) => {
         if (err) throw err
         res.json(result)
