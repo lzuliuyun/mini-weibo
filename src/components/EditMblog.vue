@@ -15,7 +15,7 @@
         <textarea v-model="content" @click="scrollToView" placeholder="你最近有什么新鲜事要分享吗？"></textarea>
       </div>
     </div>
-    <div class="image-container" v-show="imageContainerVisible">
+    <div class="image-container" v-show="imageContainerVisible || images.length">
       <image-upload :images="images" :data="{mblogid: id}"></image-upload>
     </div>
   </div>
@@ -45,6 +45,7 @@ export default {
     }
 
     this.$route.params.toolbar && (this.toolbar = this.$route.params.toolbar)
+    this.$route.params.images && (this.images = this.$route.params.images)
   },
   methods: {
     scrollToView (e) {

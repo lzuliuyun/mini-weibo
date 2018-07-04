@@ -39,7 +39,7 @@ export default {
     height: calc(100vw/3);
     box-sizing: border-box;
     padding: 5px;
-    display: inline-block;
+    /* display: inline-block; */
     vertical-align: top; /*not required*/
     position: relative;
   }
@@ -61,8 +61,8 @@ export default {
     width: 100%;
     height: 100%;
     position: relative;
-    border: 1px solid #eee;
-    border-radius: 3px;
+    /* border: 1px solid #eee;
+    border-radius: 3px; */
   }
 
   ul li.btn-upload div {

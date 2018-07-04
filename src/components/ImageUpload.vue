@@ -7,7 +7,7 @@
           <img :src="image.path">
         </div>
       </li>
-      <li class="btn-upload" v-if="images.length < 9">
+      <li class="btn-upload">
           <vue-core-image-upload
             text=''
             class="btn btn-primary"
@@ -76,7 +76,7 @@ export default {
     height: calc(100vw/3);
     box-sizing: border-box;
     padding: 5px;
-    display: inline-block;
+    /* display: inline-block; */
     vertical-align: top; /*not required*/
     position: relative;
   }

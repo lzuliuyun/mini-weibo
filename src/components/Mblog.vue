@@ -44,7 +44,7 @@ export default {
     toolbar: {
       type: Array,
       default: function () {
-        return ['comment', 'praise']
+        return ['delete', 'comment', 'praise']
       }
     },
     type: {
@@ -105,7 +105,8 @@ export default {
         name: 'edit',
         params: {
           mblog: this.mblog,
-          toolbar: this.type === 'draft' ? ['save', 'publish', 'back'] : ['save', 'publish', 'delete', 'back']
+          images: this.images,
+          toolbar: this.type === 'draft' ? ['image', 'save', 'publish', 'back'] : ['image', 'save', 'publish', 'delete', 'back']
         }
       })
     },

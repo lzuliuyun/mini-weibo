@@ -1,12 +1,12 @@
 module.exports = {
   mblog: {
-    getMblogs: 'select * from mblogView where publish = 1 ORDER BY date DESC',
+    getMblogs: 'select * from mblogView where publish = 1 and isdelete = 0 ORDER BY date DESC',
     addMblog: 'insert into mblog(content, date, publish) VALUES (?, ?, ?)',
-    getMblog: 'select * from mblog where id = ?',
+    getMblog: 'select * from mblog where id = ? and isdelete = 0',
     updateMblog: 'update mblog set content = ?, publish = ? where id = ?',
-    deleteMblog: 'delete from mblog where id = ?',
+    deleteMblog: 'update mblog set isdelete = 1 where id = ?',
     updateMblogPraise: 'update mblog set praise = ? where id = ?',
-    getDraft: 'select * from mblog where publish = 0 ORDER BY date DESC'
+    getDraft: 'select * from mblog where publish = 0 and isdelete = 0 ORDER BY date DESC'
   },
   comment: {
     addComment: 'insert into comment(content, date, mblogid) values (?, ?, ?)',

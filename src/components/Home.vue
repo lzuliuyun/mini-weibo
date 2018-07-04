@@ -1,7 +1,7 @@
 <template>
   <div>
       <div class="mblog-container">
-        <mblog v-for="mblog in mblogs" :mblog="mblog" :key="mblog.id"></mblog>
+        <mblog v-for="mblog in mblogs" @mblogDelete="onDelete" :mblog="mblog" :key="mblog.id"></mblog>
       </div>
       <div class="toolbar-container">
         <router-link to="edit" class="edit"></router-link>
@@ -26,6 +26,11 @@ export default {
       })
   },
   methods: {
+    onDelete (id) {
+      this.mblogs = this.mblogs.filter((mblog) => {
+        return mblog.id !== id
+      })
+    }
   },
   components: {
     Mblog
