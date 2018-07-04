@@ -8,6 +8,7 @@ module.exports = {
     charset: 'utf8mb4'
   },
   imageStorage: {
-    path: 'static/upload/'
+    path: 'images/upload/',
+    thumb: 'images/thumb/'
   }
 }
