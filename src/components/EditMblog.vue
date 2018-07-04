@@ -2,6 +2,7 @@
   <div class="edit">
     <div class="toolbar">
       <ul class="clearfix" :class="avgClass">
+        <li v-if="toolbar.includes('image')"><span @click="imageUpload"><span></span><span>图片</span></span></li>
         <li v-if="toolbar.includes('save')"><span @click="saveMblog"><span></span><span>保存</span></span></li>
         <li v-if="toolbar.includes('publish')"><span @click="publishMblog"><span></span><span>发布</span></span></li>
         <li v-if="toolbar.includes('delete')"><span @click="deleteMblog"><span></span><span>废弃</span></span></li>
@@ -9,36 +10,29 @@
       </ul>
     </div>
     <div class="edit-container">
-      <div>
+      <div class="expanding-area">
+        <pre><span>{{content}}</span><br></pre>
         <textarea v-model="content" @click="scrollToView" placeholder="你最近有什么新鲜事要分享吗？"></textarea>
       </div>
     </div>
-    <div>
-        <vue-core-image-upload
-          class="btn btn-primary"
-          :crop="false"
-          inputOfFile="image"
-          @imageuploaded="imageuploaded"
-          :max-file-size="5242880"
-          :multiple="true"
-          :multiple-size="9"
-          :data="{mblogid: id}"
-          url="/api/image" >
-        </vue-core-image-upload>
+    <div class="image-container" v-show="imageContainerVisible">
+      <image-upload :images="images" :data="{mblogid: id}"></image-upload>
     </div>
   </div>
 </template>
 
 <script>
 import {throttle} from 'common/util'
-import VueCoreImageUpload from 'vue-core-image-upload'
+import ImageUpload from 'components/ImageUpload'
 
 export default {
   data () {
     return {
       content: '',
       id: '',
-      toolbar: ['save', 'publish', 'delete', 'back'],
+      toolbar: ['image', 'save', 'publish', 'delete', 'back'],
+      images: [],
+      imageContainerVisible: false,
       throttleSaveMblogFun: null
     }
   },
@@ -66,10 +60,10 @@ export default {
     },
     saveMblog () {
       if (this.isDraft) {
-        this.updateMblog(false)
+        return this.updateMblog(false)
       } else {
         // add new mblog but not publish
-        this.addMblog(false)
+        return this.addMblog(false)
       }
     },
     publishMblog () {
@@ -111,8 +105,14 @@ export default {
         this.goToHome()
       }
     },
-    imageuploaded (res) {
-      console.log(res)
+    imageUpload (res) {
+      if (!this.id) {
+        this.saveMblog().then(() => {
+          this.imageContainerVisible = true
+        })
+      } else {
+        this.imageContainerVisible = true
+      }
     }
   },
   computed: {
@@ -129,7 +129,7 @@ export default {
     }
   },
   components: {
-    VueCoreImageUpload
+    ImageUpload
   }
 }
 </script>
@@ -141,24 +141,60 @@ export default {
 
 .edit-container {
   width: 100%;
-  height: calc(100% - 50px - 32px);
-  position: absolute;
 }
 
-.edit-container > div {
-  padding: 10px 10px;
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-}
-
-.edit-container div textarea {
-  width: 100%;
-  height: 100%;
+.expanding-area textarea,
+.expanding-area pre {
+  margin: 0;
   padding: 0;
+  outline: 0;
   border: 0;
+}
+
+.expanding-area {
+  position: relative;
+  /* border: 1px solid #888;
+  background: #fff; */
+}
+
+.expanding-area textarea,
+.expanding-area pre {
+  padding: 10px;
+  font-size: 14px;
+  background: transparent;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  min-height: 100px;
+}
+
+.expanding-area textarea {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  /* height: 100px; */
+  width: 100%;
+  position: absolute;
+  top: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* .expanding-area.active textarea {
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
   resize: none;
-  font-size: 15px;
+} */
+
+.expanding-area pre {
+  visibility: hidden;
+}
+.expanding-area.active pre {
+  display: block;
+  visibility: hidden;
 }
 
 .toolbar {
@@ -192,6 +228,10 @@ export default {
 
 .toolbar ul.avg-4 li {
   width: calc(100%/4);
+}
+
+.toolbar ul.avg-5 li {
+  width: calc(100%/5);
 }
 
 .toolbar ul li a {

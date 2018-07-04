@@ -4,9 +4,10 @@ module.exports = {
     user: 'liuyun',
     password: 'liuyun',
     database: 'app',
-    port: '3306'
+    port: '3306',
+    charset: 'utf8mb4'
   },
   imageStorage: {
-    path: 'upload/'
+    path: 'static/upload/'
   }
 }

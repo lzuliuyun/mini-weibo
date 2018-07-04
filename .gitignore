@@ -15,4 +15,4 @@ yarn-error.log*
 *.sln
 
 # image
-/upload/*
+static/upload/*

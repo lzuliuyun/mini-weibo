@@ -6,6 +6,9 @@
       <span>{{time}}</span>
     </div>
     <div :class="showall ? 'content content-showall' : 'content'" @click="toggleShowAll">{{mblog.content}}</div>
+    <div class="images clearfix">
+      <image-display :images="images"></image-display>
+    </div>
     <div class="toolbar">
       <ul class="clearfix">
         <li v-if="toolbar.includes('comment')"><div class="btn-comment" @click="onComment"><span></span><span>{{commentNum}}</span></div></li>
@@ -28,6 +31,7 @@
 
 <script>
 import {getRelativeTimeInfo} from 'common/util'
+import ImageDisplay from 'components/ImageDisplay'
 import CommentDisplay from 'components/CommentDisplay'
 import Comment from 'components/Comment'
 import {mapGetters} from 'vuex'
@@ -50,6 +54,7 @@ export default {
   },
   data () {
     return {
+      images: [],
       comments: [],
       showall: false,
       isParise: false,
@@ -57,7 +62,19 @@ export default {
       commentState: false
     }
   },
+  created () {
+    this.getImages()
+  },
   methods: {
+    getImages () {
+      this.$http.get('/api/image', {
+        params: {
+          mblogid: this.mblog.id
+        }
+      }).then((res) => {
+        this.images = res.data
+      })
+    },
     toggleShowAll (e) {
       !this.showall && (this.clickStartY = window.pageYOffset)
 
@@ -129,6 +146,7 @@ export default {
     ...mapGetters(['commentAdded'])
   },
   components: {
+    ImageDisplay,
     Comment,
     CommentDisplay
   },
@@ -171,6 +189,11 @@ export default {
 
   .content-showall {
     max-height: none;
+  }
+
+  .images {
+    z-index: -1;
+    position: relative;
   }
 
   .toolbar ul {

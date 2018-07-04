@@ -15,7 +15,7 @@ module.exports = {
   },
   image: {
     addImages: 'insert into image (name, path, date, mblogid) values ?',
-    getImages: 'select * from image where mblogid = ? and isdelete = 0',
+    getImages: 'select * from image where mblogid = ? and isdelete = 0 order by date',
     deleteImage: 'update image set isdelete = 1 where id = ?'
   }
 }

@@ -8,6 +8,7 @@ const pool = mysql.createPool({
   password: dbConfig.mysql.password,
   database: dbConfig.mysql.database,
   port: dbConfig.mysql.port,
+  charset: dbConfig.mysql.charset,
   // 多语句查询
   multipleStatements: true
 })
@@ -142,25 +143,30 @@ module.exports = {
   uploadImage (req, res, next) {
     var files = req.files
     var imageSqlData = []
-    var resImageData = []
     var date = +new Date()
     var mblogid = req.body.mblogid
     files.forEach((file) => {
       imageSqlData.push([file.originalname, file.path, date, mblogid])
-      resImageData.push({
-        name: file.originalname,
-        path: file.path,
-        date: date,
-        mblogid: mblogid
-      })
     })
     pool.getConnection((err, conn) => {
       if (err) throw err
       var sql = sqlMap.image.addImages
       conn.query(sql, [imageSqlData], (err, result) => {
         if (err) throw err
-        res.json(resImageData)
-        conn.release()
+
+        var sqlGetImages = sqlMap.image.getImages
+        conn.query(sqlGetImages, [mblogid], (err, result) => {
+          if (err) throw err
+
+          result = result.filter((curRes) => {
+            return !!imageSqlData.find((data) => {
+              return data.includes(curRes.path) && data.includes(curRes.name) && data.includes(curRes.date)
+            })
+          })
+
+          res.json(result)
+          conn.release()
+        })
       })
     })
   },
