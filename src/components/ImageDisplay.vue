@@ -2,9 +2,9 @@
   <div class="image-display">
     <div class="image-display-container">
       <ul>
-        <li v-for="(image, index) in images" :key="index">
+        <li v-for="(image, index) in resizeImages" :key="index" @click="onImageClick(index)">
           <div class="image-container">
-            <img v-lazy="image.path">
+            <img v-lazy="image.path" alt="加载中...">
           </div>
         </li>
       </ul>
@@ -20,6 +20,26 @@ export default {
       default: function () {
         return []
       }
+    }
+  },
+  data () {
+    return {
+      resizeImages: []
+    }
+  },
+  methods: {
+    onImageClick (index) {
+      this.$emit('imageSelect', index)
+    }
+  },
+  watch: {
+    images (newImages, old) {
+      this.resizeImages = newImages.map((img) => {
+        return {
+          id: img.id,
+          path: '200\\' + img.path
+        }
+      })
     }
   }
 }

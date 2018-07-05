@@ -4,6 +4,9 @@
       <router-link to="/">Wechat SLB and GBB</router-link>
     </div>
     <div class="app-temp"></div>
+    <div class="app-image-container">
+        <image-zoom-display></image-zoom-display>
+    </div>
     <div>
       <keep-alive>
           <router-view v-if="$route.meta.keepAlive">
@@ -19,8 +22,14 @@
 </template>
 
 <script>
+
+import ImageZoomDisplay from 'components/ImageZoomDisplay'
+
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    ImageZoomDisplay
+  }
 }
 </script>
 
@@ -33,7 +42,7 @@ export default {
   text-align: center;
   box-shadow: 0 5px 5px rgba(0, 0, 0, .08);
   position: fixed;
-  z-index: 10;
+  z-index: 3;
   background-color: white;
 }
 
@@ -54,7 +63,7 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #333;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 body {

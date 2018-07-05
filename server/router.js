@@ -1,8 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const api = require('./api')
-const resizeImage = require('./resizeImage')
-const RequestSplitter = require('./requestSplitter')
 const multer = require('multer')
 const config = require('./config')
 const uuid = require('uuid/v1')
@@ -77,19 +75,6 @@ router.post('/image', upload.array('image[]', 9), (req, res, next) => {
 
 router.delete('/image/:id', (req, res, next) => {
   api.deleteImage(req, res, next)
-})
-
-// image service
-router.get(RequestSplitter.urlMatch, (req, res, next) => {
-  resizeImage.resize(req, res, next)
-  // var result = new RequestSplitter(req.path, req.query)
-  // var options = result.mapOptions()
-  // console.log(options)
-  // res.type(`image/${options.format || 'png'}`)
-
-  // var thumbPath = path.join(__dirname, '../' + config.imageStorage.thumb) + cryptStr(req.path) + '.' + options.format
-
-  // resizeImage.resizeImage(options).pipe(res).pipe(fs.createWriteStream(thumbPath))
 })
 
 module.exports = router

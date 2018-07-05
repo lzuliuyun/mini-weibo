@@ -1,5 +1,6 @@
-// import * as types from './mutation-types'
+import * as types from './mutation-types'
 
-// export function selectComment ({commit, state}, {comment}) {
-//   commit(types.SET_COMMENT, comment)
-// }
+export function selectImage ({commit, state}, {images, selectIndex}) {
+  commit(types.SET_IMAGE_ZOOM_LIST, images)
+  commit(types.SET_IMAGE_ZOOM_INDEX, selectIndex)
+}

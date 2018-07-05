@@ -21,22 +21,26 @@ module.exports = {
   resize (req, res, next) {
     var result = new RequestSplitter(req.path, req.query)
     var options = result.mapOptions()
+    // console.log(options)
     res.type(`image/${options.format || 'png'}`)
 
     var thumbPath = path.join(__dirname, '../' + config.imageStorage.thumb) + cryptStr(req.path) + '.' + options.format
+    var imagePath = path.join(__dirname, '../' + options.imagefile)
     if (fs.existsSync(thumbPath)) {
       outputImage(thumbPath, res)
-    } else {
+    } else if (fs.existsSync(imagePath)) {
+      options.imagePath = imagePath
       this.resizeImage(options, thumbPath, res).then(() => {
         outputImage(thumbPath, res)
       })
+    } else {
+      res.writeHead(404, 'Then image resource is not exist')
+      res.end()
     }
   },
   resizeImage (options, thumbPath) {
     // http://localhost:3000/images/upload/0a72cec0-7f44-11e8-9260-c144568577bd.jpeg
-    let imagePath = path.join(__dirname, '../' + options.imagefile)
-
-    let transform = sharp(imagePath)
+    let transform = sharp(options.imagePath)
     transform = transform.toFormat(options.format)
     let width = (options.width && parseInt(options.width)) || undefined
     let height = (options.height && parseInt(options.height)) || undefined

@@ -1,5 +1,7 @@
 const state = {
-  commentAdded: {}
+  commentAdded: {},
+  imageZoomList: [],
+  imageZoomIndex: 0
 }
 
 export default state

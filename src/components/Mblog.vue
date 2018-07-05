@@ -7,7 +7,7 @@
     </div>
     <div :class="showall ? 'content content-showall' : 'content'" @click="toggleShowAll">{{mblog.content}}</div>
     <div class="images clearfix">
-      <image-display :images="images"></image-display>
+      <image-display :images="images" @imageSelect="onImageSelect"></image-display>
     </div>
     <div class="toolbar">
       <ul class="clearfix">
@@ -34,7 +34,7 @@ import {getRelativeTimeInfo} from 'common/util'
 import ImageDisplay from 'components/ImageDisplay'
 import CommentDisplay from 'components/CommentDisplay'
 import Comment from 'components/Comment'
-import {mapGetters} from 'vuex'
+import {mapGetters, mapActions} from 'vuex'
 
 export default {
   props: {
@@ -129,7 +129,11 @@ export default {
       this.comments = this.comments.filter((comment) => {
         return comment.id !== id
       })
-    }
+    },
+    onImageSelect (selectIndex) {
+      this.selectImage({images: this.images, selectIndex})
+    },
+    ...mapActions(['selectImage'])
   },
   computed: {
     praise () {
@@ -193,7 +197,7 @@ export default {
   }
 
   .images {
-    z-index: -1;
+    /* z-index: -1; */
     position: relative;
   }
 

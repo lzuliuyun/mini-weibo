@@ -17,6 +17,18 @@ module.exports = {
         pathRewrite: {
           '^/api': ''
         }
+      },
+      '/**': {
+        target: 'http://localhost:3000/',
+        filter: function (pathname, req) {
+          // match resize image service
+          return pathname.match([
+            '^\/?(c|w|h)?([0-9]+)x?([0-9]+)?,?',
+            '(c|e|w|n(?:e|w)?|s(?:e|w)?)?',
+            '\/?(png|jpg)?,?([0-9]+)?',
+            '\/(.*)$'
+          ].join('')) && req.method === 'GET'
+        }
       }
     },
 

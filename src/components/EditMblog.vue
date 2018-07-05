@@ -161,7 +161,7 @@ export default {
 .expanding-area textarea,
 .expanding-area pre {
   padding: 10px;
-  font-size: 14px;
+  font-size: 16px;
   background: transparent;
   white-space: pre-wrap;
   word-wrap: break-word;
